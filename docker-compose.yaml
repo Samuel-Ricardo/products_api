@@ -1,7 +1,6 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
   api:
     depends_on:
       - postgres
@@ -10,7 +9,7 @@ services:
     ports:
       - "8081:8081"
     external_links:
-      - 'host.docker.internal'
+      - "host.docker.internal"
 
   postgres:
     image: postgres
@@ -40,5 +39,4 @@ services:
     ports:
       - "5050:80"
     external_links:
-      - 'host.docker.internal'
-
+      - "host.docker.internal"
