@@ -12,4 +12,17 @@ services:
     external_links:
       - 'host.docker.internal'
 
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      PGDATA: /data/postgres
+    volumes:
+      - .docker/postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    external_links:
+      - "host.docker.internal"
 
