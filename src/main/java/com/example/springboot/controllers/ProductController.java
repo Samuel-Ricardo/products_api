@@ -17,13 +17,13 @@ import java.util.UUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@RestController("products")
+@RestController()
 public class ProductController {
 
     @Autowired
     ProductRepository repository;
 
-    @GetMapping("/")
+    @GetMapping("/products")
     public ResponseEntity<List<ProductModel>> getAll() {
         List<ProductModel> products = repository.findAll();
 
@@ -35,18 +35,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<Object> getOne(@PathVariable(value = "id") UUID id) {
         Optional<ProductModel> productO = repository.findById(id);
 
         if (productO.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product Not Found");
 
-        productO.get().add(linkTo(methodOn(ProductController.class).getAll()).withRel("Product List"))
+        productO.get().add(linkTo(methodOn(ProductController.class).getAll()).withRel("Product_List"));
 
         return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
-    @PostMapping("")
+    @PostMapping("/products")
     public ResponseEntity<ProductModel> save(@RequestBody @Valid ProductRecordDTO dto){
 
         var model = new ProductModel();
@@ -55,7 +55,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(model));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<String> delete(@PathVariable(value = "id") UUID id) {
 
         Optional<ProductModel> productO = repository.findById(id);
@@ -66,7 +66,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body("Product Deleted!");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<Object> update(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProductRecordDTO dto) {
 
         var model = repository.findById(id);
