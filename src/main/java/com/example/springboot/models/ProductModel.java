@@ -1,4 +1,4 @@
-package com.example.springboot.model;
+package com.example.springboot.models;
 
 import jakarta.persistence.*;
 
