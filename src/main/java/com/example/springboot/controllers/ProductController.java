@@ -27,6 +27,11 @@ public class ProductController {
     public ResponseEntity<List<ProductModel>> getAll() {
         List<ProductModel> products = repository.findAll();
 
+        products.forEach( product -> {
+            UUID id = product.getIdProduct();
+            product.add(linkTo(methodOn(ProductController.class).getOne(id)).withSelfRel());
+        });
+
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
@@ -57,6 +62,19 @@ public class ProductController {
 
         repository.delete(productO.get());
         return ResponseEntity.status(HttpStatus.OK).body("Product Deleted!");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProductRecordDTO dto) {
+
+        var model = repository.findById(id);
+
+        if (model.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+
+        var product = model.get();
+        BeanUtils.copyProperties(dto, product);
+
+        return ResponseEntity.status(HttpStatus.OK).body(repository.save(product));
     }
 
 }
